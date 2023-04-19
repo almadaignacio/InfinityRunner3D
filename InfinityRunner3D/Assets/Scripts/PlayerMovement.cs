@@ -12,6 +12,7 @@ public class PlayerMovement : MonoBehaviour
 
     float horizontalInput;
     float horizontalMultiplier = 1.7f;
+    bool Is_Grounded;
     /*
     [Range(-1, 1)]
     [SerializeField] int position;
@@ -48,10 +49,26 @@ public class PlayerMovement : MonoBehaviour
 
     }
 
+    private void Start()
+    {
+        Is_Grounded = true;
+    }
+
     // Update is called once per frame
     void Update()
     {
         horizontalInput = Input.GetAxis("Horizontal");
+
+        if(Input.GetKeyDown(KeyCode.Space) && Is_Grounded == true)
+        {
+            Jump();
+        }
+    }
+
+    public void Jump()
+    {
+        Is_Grounded = false;
+        rb.AddForce(0, 6, 0, ForceMode.Impulse);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -65,13 +82,13 @@ public class PlayerMovement : MonoBehaviour
         {
             Console.WriteLine("Coin");
         }
-    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Coin"))
+        if(collision.gameObject.CompareTag("Ground"))
         {
-            Console.WriteLine("Coin");
+            Is_Grounded = true;
         }
     }
+
+  
+
 }
